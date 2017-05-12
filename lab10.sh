@@ -1,13 +1,15 @@
 #!/bin/bash
 
+OLDIFS=$IFS
+IFS=$'\n'
 FCOUNTER=0
-DCOUNTER=0
 TEMP=$(mktemp /tmp/filelist.XXXXXXXXXXX)
 quit(){
         exit
 }
 cleanup(){
         rm $TEMP
+	IFS=$OLDIFS
 }
 trap quit SIGINT SIGTERM
 trap cleanup EXIT
