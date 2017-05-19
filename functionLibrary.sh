@@ -1,6 +1,6 @@
 getHelp() {
-echo $0" has the following syntax:"
-echo $0" -options <source directory> <target directory>"
+#echo "$0"" has the following syntax:"
+#echo "$0"" -options <source directory> <target directory>"
 echo "<source directory> defaults to current directory."
 echo "<target directory> defaults to current user's home."
 echo "Valid options:"
@@ -11,55 +11,50 @@ exit
 }
 
 getOpts() {
-RETURN=0
-while [ "$1" != "" ]; do
-	case $1 in
-		-f )	RETURN=$((RETURN+1))
-			shift
-			;;
-		-h )	getHelp
-			shift
-			RETURN=0				
-			;;
-		-s )	RETURN=$((RETURN+2))
-			shift
-			;;
-		* )	
-			exit
-			;;
-	esac			
-done
-return RETURN
+case $1 in
+	-f )	return 1
+		shift
+		;;
+	-h )	getHelp
+		shift
+		return 0				
+		;;
+	-s )	return 2
+		shift
+		;;
+	-fs )	return 3
+		;;
+esac			
 }
 
 getYYMMDD() {
 local VAR=$(stat $1)
-local VAR=${VAR#*Modify: }
-local VAR=${VAR%% *}
+VAR=${VAR#*Modify: }
+VAR=${VAR%% *}
 echo $VAR
 }
 
 getMMDD() {
 local VAR=$(getYYMMDD $1)
-local VAR=${VAR#*-}
+VAR=${VAR#*-}
 echo $VAR
 }
 
 getYY() {
 local VAR=$(getYYMMDD $1)
-local VAR=${VAR%%-*}
+VAR=${VAR%%-*}
 echo $VAR
 }
 
 getMM() {
 local VAR=$(getMMDD $1)
-local VAR=${VAR%-*}
+VAR=${VAR%-*}
 echo $VAR
 }
 
 getDD() {
 local VAR=$(getMMDD $1)
-local VAR=${VAR#-*}
+VAR=${VAR#-*}
 echo $VAR
 }
 
