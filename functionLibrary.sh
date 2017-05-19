@@ -1,6 +1,6 @@
 getHelp() {
-#echo "$0"" has the following syntax:"
-#echo "$0"" -options <source directory> <target directory>"
+echo "$0"" has the following syntax:"
+echo "$0"" -options <source directory> <target directory>"
 echo "<source directory> defaults to current directory."
 echo "<target directory> defaults to current user's home."
 echo "Valid options:"
@@ -31,31 +31,31 @@ getYYMMDD() {
 local VAR=$(stat $1)
 VAR=${VAR#*Modify: }
 VAR=${VAR%% *}
-echo $VAR
+echo "$VAR"
 }
 
 getMMDD() {
 local VAR=$(getYYMMDD $1)
 VAR=${VAR#*-}
-echo $VAR
+echo "$VAR"
 }
 
 getYY() {
 local VAR=$(getYYMMDD $1)
 VAR=${VAR%%-*}
-echo $VAR
+echo "$VAR"
 }
 
 getMM() {
 local VAR=$(getMMDD $1)
 VAR=${VAR%-*}
-echo $VAR
+echo "$VAR"
 }
 
 getDD() {
 local VAR=$(getMMDD $1)
 VAR=${VAR#-*}
-echo $VAR
+echo "$VAR"
 }
 
 quit() {

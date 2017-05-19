@@ -6,8 +6,8 @@ trap cleanup EXIT
 
 SOURCE=.
 TARGET=~
-OPTIONS=0
-OPTIONS=$(getOpts "$1" )
+getOpts "$1" 
+OPTIONS=$?   
 if [ "$OPTIONS" -ne 0 ]; then
 	if [ "$OPTIONS" -gt 2 ]; then
 		if [ -d "$2" ]; then #Don't let users give garbage paths
