@@ -17,12 +17,14 @@ case $1 in
 		;;
 	-h )	getHelp
 		shift
-		return 0				
+		return -1	
 		;;
 	-s )	return 2
 		shift
 		;;
 	-fs )	return 3
+		;;
+	* )	return 0
 		;;
 esac			
 }
@@ -54,7 +56,7 @@ echo "$VAR"
 
 getDD() {
 local VAR=$(getMMDD $1)
-VAR=${VAR#-*}
+VAR=${VAR#*-}
 echo "$VAR"
 }
 
@@ -63,6 +65,8 @@ exit
 }
 
 cleanup() {
-:
+if [ -d "$TEMP" ]; then
+	rm -rf "$TEMP"
+fi
 }
 
