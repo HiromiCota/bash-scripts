@@ -50,13 +50,12 @@ do
 	grab; WEB[$COUNTER]=$VAR; bump
 	((COUNTER++))
 done < "$1"	
-
-for (( i=0; i<COUNTER; i++ )) ; do
+max=${#FNAME[@]}
+for (( i=0; i<max; i++ )) ; do
 	echo -n "\""${FNAME[$i]}"\",\""${LNAME[$i]}"\",\""${COMP[$i]}"\","
 	echo -n "\""${STREET[$i]}"\",\""${CITY[$i]}"\",\""${COUNTY[$i]}"\","
 	echo -n "\""${STATE[$i]}"\",\""${ZIP[$i]}"\",\""${PHONE[$i]}"\","
 	echo -n "\""${FAX[$i]}"\",\""${EMAIL[$i]}"\",\""${WEB[$i]}"\""
 	echo
 done
-IFS=$OLDIFS
 	
