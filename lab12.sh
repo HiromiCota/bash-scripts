@@ -37,17 +37,17 @@ while IFS= read -r LINE
 do
 	LINE=$(echo "$LINE" | sed 's/"//g')
 	grab; FNAME["$COUNTER"]="$VAR"; bump
-	grab; LNAME[$COUNTER]=$VAR; bump
-	grab; COMP[$COUNTER]=$VAR; bump
-	grab; STREET[$COUNTER]=$VAR; bump
-	grab; CITY[$COUNTER]=$VAR; bump
-	grab; COUNTY[$COUNTER]=$VAR; bump
-	grab; STATE[$COUNTER]=$VAR; bump
-	grab; ZIP[$COUNTER]=$VAR; bump
-	grab; PHONE[$COUNTER]=$VAR; bump
-	grab; FAX[$COUNTER]=$VAR; bump
-	grab; EMAIL[$COUNTER]=$VAR; bump
-	grab; WEB[$COUNTER]=$VAR; bump
+	grab; LNAME["$COUNTER"]="$VAR"; bump
+	grab; COMP["$COUNTER"]="$VAR"; bump
+	grab; STREET["$COUNTER"]="$VAR"; bump
+	grab; CITY["$COUNTER"]="$VAR"; bump
+	grab; COUNTY["$COUNTER"]="$VAR"; bump
+	grab; STATE["$COUNTER"]="$VAR"; bump
+	grab; ZIP["$COUNTER"]="$VAR"; bump
+	grab; PHONE["$COUNTER"]="$VAR"; bump
+	grab; FAX["$COUNTER"]="$VAR"; bump
+	grab; EMAIL["$COUNTER"]="$VAR"; bump
+	grab; WEB["$COUNTER"]="$VAR"; bump
 	((COUNTER++))
 done < "$1"	
 max=${#FNAME[@]}
