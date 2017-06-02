@@ -3,7 +3,6 @@
 STRING=$1
 SLASH='/'
 if [ "$STRING" !=  "$SLASH" ]; then
-	STRING=$(echo "$STRING" | sed 's/.*\///')
-	STRING=$(echo "$STRING" | sed 's/'"$2"'//')
+	STRING=${STRING##*/}
 fi
 echo "$STRING"
