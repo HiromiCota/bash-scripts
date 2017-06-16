@@ -51,3 +51,8 @@ if [[ FAIL -eq 1 ]];then
 	exit
 fi
 }
+sanityCheck() {
+sizeCheck $1
+utilCheck
+}
+
