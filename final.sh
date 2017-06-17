@@ -52,7 +52,7 @@ for f in $SOURCE; do
 		copyFile "$f"
 		"$HASH" >> "$HASHES" 
 	else
-		"Duplicate file ""$PWD""$f"" ignored." >> ERRLOG
+		"Duplicate file ""$PWD""$f"" ignored." >> "$ERRLOG"
 		if [[ "$EXTENSION" == ".jpg" ]]; then
 			((DUPJPG++))
 		else

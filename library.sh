@@ -45,13 +45,13 @@ export DUPJPG=0
 }
 sizeCheck() {
 local FREE=$( df -k --output=avail "$1" | tail -n1 )
-local USED=$( du -sb "$1" | cut -f1 )
-local NEEDED=$((USED*2))
+local USED=$( du -BK "$1" | cut -d'K' -f1 )
+local NEEDED="$USED" 
 if [[ "$FREE" -lt "$NEEDED" ]]; then
 	echo "Not enough space available!"
 	echo "$FREE""KB free."
 	echo "$NEEDED""KB needed."
-	"Insufficient space for temporary files. Halting." >> ERRLOG
+	"Insufficient space for temporary files. Halting." >> "$ERRLOG"
 	exit
 else
 	return 0
@@ -59,20 +59,20 @@ fi
 }
 
 utilCheck() {
-exiv2 | grep "command not found"
+exiv2 -q | grep "command not found"
 if [[ $? -eq 0 ]]; then
 	FAIL=1
 	echo "This script requirse exiv2 binary."
-	"Missing dependency: exiv2" >> ERRLOG
+	"Missing dependency: exiv2" >> "$ERRLOG"
 fi
 md5sum final.sh | grep "command not found"
 if [[ $? -eq 0 ]]; then
 	FAIL=1
 	echo "This script requires md5sum binary."
-	"Missing dependency: md5sum" >> ERRLOG
+	"Missing dependency: md5sum" >> "$ERRLOG"
 fi
 if [[ FAIL -eq 1 ]];then
-	"Exiting unsuccessfully." >> ERRLOG
+	"Exiting unsuccessfully." >> "$ERRLOG"
 	exit
 fi
 }
