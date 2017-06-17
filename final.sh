@@ -4,7 +4,7 @@ logger "Script started"
 trap quit SIGTERM
 trap int SIGINT
 trap cleanup EXIT
-setup()
+setup
 while getopts ":f:d" opt; do
 	case ${opt} in
 	 f)
@@ -18,33 +18,38 @@ while getopts ":f:d" opt; do
 	   shift
 	   ;;
 	 \?)
-	   echo "Invalid option: -"$opt""
+	   echo "Invalid option: -""$opt"
 	   ;;
 	esac
 done
+if [[ "$DEBUG" -eq 1 ]]; then
+	set -x
+fi
 SOURCE=$1
-sanityCheck $SOURCE #exits if fails
+sanityCheck "$SOURCE" #exits if fails
 IFS=': '
-for f in "$SOURCE"; do
+for f in $SOURCE; do
 	EXTENSION=${$1##*.}
+	EXTENSION=$(echo ${EXTENSION,,} )
 	HASH=$(tail -c1000 "$f" | md5sum)
 	grep -q "$HASH" "$HASHES"
-	if [[ $? -eq 1 ]]; then #only process files not in HASHES
+        if [[ $? -eq 0 ]]; then
 		if [[ "$EXTENSION" == ".jpg" ]]; then
 			((JPGTOTAL++))
 		else
 			((VIDTOTAL++))
 		fi
 		PWD=$(pwd)
-		if [[ $PWD == $LASTPWD]]; then
+		if [[ "$PWD" == "$LASTPWD" ]]; then
 			logDirectory "$PWD"
+		fi
 		setALL "$f"
 		logFile "$f"
 		LASTPWD="$PWD"
 		copyFile "$f"
 		"$HASH" >> "$HASHES" 
 	else
-		ERRLOG <<  "Duplicate file ""$PWD""$f"" ignored."
+		"Duplicate file ""$PWD""$f"" ignored." >> ERRLOG
 		if [[ "$EXTENSION" == ".jpg" ]]; then
 			((DUPJPG++))
 		else
