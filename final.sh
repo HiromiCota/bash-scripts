@@ -28,7 +28,7 @@ fi
 SOURCE=$1
 sanityCheck "$SOURCE" #exits if fails
 IFS=': '
-for f in $SOURCE; do
+for f in $(find "$SOURCE" -name '*.*'); do
 	if [[ "$DEBUG" -eq 1 ]]; then
 		read hitAnyKey
 	fi
@@ -52,7 +52,7 @@ for f in $SOURCE; do
 		copyFile "$f"
 		"$HASH" >> "$HASHES" 
 	else
-		"Duplicate file ""$PWD""$f"" ignored." >> "$ERRLOG"
+		echo "Duplicate file ""$PWD""$f"" ignored." >> "$ERRLOG"
 		if [[ "$EXTENSION" == ".jpg" ]]; then
 			((DUPJPG++))
 		else

@@ -41,7 +41,8 @@ export VIDTOTAL=0
 export CURRENTVID=1
 export DUPVID=0
 export DUPJPG=0
-
+export PWD=$(pwd)
+export LASTPWD=$PWD
 }
 sizeCheck() {
 local FREE=$( df -k --output=avail "$1" | tail -n1 )
