@@ -82,14 +82,26 @@ setSECOND() {
 SECOND=$(echo "$TIME" | cut -c7-8)
 }
 setALL() {
-setDATE $1
-setTIME $1
-setYEAR
-setMONTH
-setDAY
-setHOUR
-setMINUTE
-setSECOND
-MAKE="Unknown_Manufacturer"
-MODEL="Unknown_Camera"
+set $(exiv2 -g Exif.Image.DateTime -Pv "$1")
+	if [[ $? -eq 0 ]]; then
+		YEAR="$1"
+		MONTH="$2"
+		DAY="$3"
+		HOUR="$4"
+		MINUTE="$5"
+		SECOND="$6"
+		MAKE=$(exiv2 -g Exif.Image.Make -Pv "$f")
+		MODEL=$(exiv2 -g Exif.Image.Model -Pv "$f")
+ 	else
+		setDATE $1
+		setTIME $1
+		setYEAR
+		setMONTH
+		setDAY
+		setHOUR
+		setMINUTE
+		setSECOND
+		MAKE="Unknown_Manufacturer"
+		MODEL="Unknown_Camera"
+	fi
 }
