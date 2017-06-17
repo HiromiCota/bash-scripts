@@ -46,14 +46,7 @@ for f in "$SOURCE"; do
 			MAKE=$(exiv2 -g Exif.Image.Make -Pv "$f")
 			MODEL=$(exiv2 -g Exif.Image.Model -Pv "$f")
  		   else
-			YEAR=$(getYY "$f")
-			MONTH=$(getMM "$f")
-			DAY=$(getDD "$f")
-			HOUR=$(getHH "$f")
-			MINUTE=$(getmm "$f")
-			SECOND=$(getSS "$f")
-			MAKE="Unknown_Manufacturer"
-			MODEL="Unknown_Camera"
+			setALL "$f"			
 		   fi
 	fi
 	"$HASH" >> "$HASHES" #
