@@ -35,21 +35,17 @@ for f in "$SOURCE"; do
 	HASH=$(tail -c1000 "$f" | md5sum)
 	grep -q "$HASH" "$HASHES"
 	if [[ $? -eq 1 ]]; then #only process files not in HASHES
-		set $(exiv2 -g Exif.Image.DateTime -Pv "$f")
-		  if [[ $? -eq 0 ]]; then
-			YEAR="$1"
-			MONTH="$2"
-			DAY="$3"
-			HOUR="$4"
-			MINUTE="$5"
-			SECOND="$6"
-			MAKE=$(exiv2 -g Exif.Image.Make -Pv "$f")
-			MODEL=$(exiv2 -g Exif.Image.Model -Pv "$f")
- 		   else
-			setALL "$f"			
-		   fi
+		PWD=$(pwd)
+		if [[ $PWD == $LASTPWD]]; then
+			logDirectory "$PWD"
+		setALL "$f"
+		logFile "$f"
+		LASTPWD="$PWD"
+		copyFile "$f"
+		"$HASH" >> "$HASHES" 
 	fi
-	"$HASH" >> "$HASHES" #
+	
+	
 
 echo $DIR
 
