@@ -20,9 +20,11 @@ export MAKE
 export MODEL
 export HASH
 export HASHES=$(touch "$TEMP"/hashes)
+export LOG=$(touch "$TEMP"/log)
 export FAIL=0
 export TIME
 export DATE
+export PWD
 }
 sizeCheck() {
 local FREE=`df -k --output=avail "$1" | tail -n1`
@@ -105,3 +107,8 @@ set $(exiv2 -g Exif.Image.DateTime -Pv "$1")
 		MODEL="Unknown_Camera"
 	fi
 }
+logDirectory() {
+echo -e "\tDirectory : "$1"" >> "$LOG"
+}
+logFile() {
+echo "File : "$1" "$DATE" "$TIME" "$MAKE" "$MODEL"" >> "$LOG"
