@@ -1,11 +1,10 @@
 #!/bin/bash
 source library.sh
-
-trap quit SIGINT SIGTERM
+logger "Script started"
+trap quit SIGTERM
+trap int SIGINT
 trap cleanup EXIT
 setup()
-#FORCE=0
-#DEBUG=0
 while getopts ":f:d" opt; do
 	case ${opt} in
 	 f)
@@ -22,14 +21,9 @@ while getopts ":f:d" opt; do
 	   echo "Invalid option: -"$opt""
 	   ;;
 	esac
-
 done
 SOURCE=$1
-sizeCheck $SOURCE #exits if fails
-utilCheck	  #exits if fails
-#TEMP=$(mktemp -d)
-#HASHES=$(touch "$TEMP"/hashes)
-#OLDIFS=IFS
+sanityCheck $SOURCE #exits if fails
 IFS=': '
 for f in "$SOURCE"; do
 	HASH=$(tail -c1000 "$f" | md5sum)
@@ -43,9 +37,10 @@ for f in "$SOURCE"; do
 		LASTPWD="$PWD"
 		copyFile "$f"
 		"$HASH" >> "$HASHES" 
-	fi
-	
-	
+	else
+		ERRLOG <<  "Duplicate file ""$PWD""$f"" ignored."
+	fi	
+done
 
 echo $DIR
 
