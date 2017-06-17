@@ -32,7 +32,7 @@ for f in $SOURCE; do
 	if [[ "$DEBUG" -eq 1 ]]; then
 		read hitAnyKey
 	fi
-	EXTENSION=${$1##*.}
+	EXTENSION=${1##*.}
 	EXTENSION=$(echo ${EXTENSION,,} )
 	HASH=$(tail -c1000 "$f" | md5sum)
 	grep -q "$HASH" "$HASHES"
