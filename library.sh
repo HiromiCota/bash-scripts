@@ -6,7 +6,7 @@ logger "Program terminated by user"
 quit
 }
 cleanup() {
-if [ ! -d "$TEMP" ]; then
+if [ -d "$TEMP" ]; then
 	rm -rf "$TEMP"
 fi
 }
@@ -154,14 +154,13 @@ TARGET="$TARGET/$DAY"
 if [ ! -d "$TARGET" ]; then
 	mkdir "$TARGET"
 fi
-NAME=""$YEAR"-"$MONTH"-"$DAY"_"$HOUR"-"$MINUTE"-"$SECOND"_"$MAKE"_"$MODEL""
+NAME="$YEAR""-""$MONTH""-""$DAY""_""$HOUR""-""$MINUTE""-""$SECOND""_""$MAKE""_""$MODEL"
 local counter=1
 while [ -e "$TARGET"/"$NAME" ];do
 	NAME="$NAME""-""$counter"
-	(($counter++))
+	((counter++))
 done
-EXTENSION=${echo "$counter,,"}
-NAME+=".""$EXTENSION"
+NAME+="$EXTENSION"
 cp "$1" "$TARGET"/"$NAME"
 logCopy "$1" "$TARGET"/"$NAME"
 if [[ "$EXTENSION" == ".jpg" ]]; then
@@ -181,7 +180,7 @@ echo "It will now delete the original files to save space. "
 echo "Are you absolutely sure that you want to delete ""$SOURCE""?(Y|N)"
 read why_en
 why_en=${why_en^^}
-if [ $why_en == "Y" ]; then
+if [ "$why_en" == "Y" ]; then
 	rm -rf "$SOURCE"
 fi
 }
