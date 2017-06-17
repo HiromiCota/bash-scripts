@@ -11,6 +11,7 @@ if [ ! -d "$TEMP" ]; then
 fi
 }
 setup() {
+export HOMEDIR=$( getent passwd "$USER" | cut -d':' -f6 )
 export FORCE=0
 export DEBUG=0
 export SOURCE
@@ -25,19 +26,26 @@ export SECOND
 export MAKE
 export MODEL
 export HASH
-export HASHES=$(touch "$TEMP"/hashes)
-export LOG=$(touch "$TEMP"/log)
-export ERRLOG=$(touch "$TEMP"/final_error.log)
+export HASHES=$( touch "$TEMP"/hashes )
+export LOG=$( touch "$HOMEDIR"/final_event.log)
+export ERRLOG=$( touch "$HOMEDIR"/final_error.log )
 export FAIL=0
 export TIME
 export DATE
 export PWD
 export EXTENSION
 export NAME
+export JPGTOTAL=0
+export CURRENTJPG=1
+export VIDTOTAL=0
+export CURRENTVID=1
+export DUPVID=0
+export DUPJPG=0
+
 }
 sizeCheck() {
-local FREE=$(df -k --output=avail "$1" | tail -n1)
-local USED=$(du -sb "$1" | cut -f1)
+local FREE=$( df -k --output=avail "$1" | tail -n1 )
+local USED=$( du -sb "$1" | cut -f1 )
 local NEEDED=$((USED*2))
 if [[ "$FREE" -lt "$NEEDED" ]]; then
 	echo "Not enough space available!"
@@ -73,7 +81,7 @@ sizeCheck "$1"
 utilCheck
 }
 setDATE() {
-DATE=$(stat "$1" | grep Modify | cut -d' ' -f2)
+DATE=$( stat "$1" | grep Modify | cut -d' ' -f2 )
 }
 setYEAR() {
 YEAR=$(echo "$DATE" | cut -d'-' -f1)
@@ -119,7 +127,6 @@ set "$(exiv2 -g Exif.Image.DateTime -Pv "$1")"
 		MAKE="Unknown_Manufacturer"
 		MODEL="Unknown_Camera"
 	fi
-EXTENSION=${$1##*.}
 }
 logDirectory() {
 echo -e "\tDirectory : ""$1" >> "$LOG"
@@ -150,11 +157,31 @@ fi
 NAME=""$YEAR"-"$MONTH"-"$DAY"_"$HOUR"-"$MINUTE"-"$SECOND"_"$MAKE"_"$MODEL""
 local counter=1
 while [ -e "$TARGET"/"$NAME" ];do
-	NAME="$NAME""$counter"
+	NAME="$NAME""-""$counter"
 	(($counter++))
 done
 EXTENSION=${echo "$counter,,"}
 NAME+=".""$EXTENSION"
 cp "$1" "$TARGET"/"$NAME"
 logCopy "$1" "$TARGET"/"$NAME"
+if [[ "$EXTENSION" == ".jpg" ]]; then
+	echo "Copying ""$NAME"" - File ""$CURRENTJPG"" out of ""$JPGTOTAL"
+	((CURRENTJPG++))
+else
+	echo "Copying ""$NAME"" - File ""$CURRENTVID"" out of ""$VIDTOTAL"
+	((CURRENTVID++))
+fi
+}
+copyTemp() {
+mv "$TEMP" "$HOMEDIR"
+}
+eraseSource() {
+echo "The script has organized and copied your files."
+echo "It will now delete the original files to save space. "
+echo "Are you absolutely sure that you want to delete ""$SOURCE""?(Y|N)"
+read why_en
+why_en=${why_en^^}
+if [ $why_en == "Y" ]; then
+	rm -rf "$SOURCE"
+fi
 }
