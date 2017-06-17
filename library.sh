@@ -21,6 +21,8 @@ export MODEL
 export HASH
 export HASHES=$(touch "$TEMP"/hashes)
 export FAIL=0
+export TIME
+export DATE
 }
 sizeCheck() {
 local FREE=`df -k --output=avail "$1" | tail -n1`
@@ -55,4 +57,39 @@ sanityCheck() {
 sizeCheck $1
 utilCheck
 }
-
+setDATE() {
+DATE=$(stat $1 | grep Modify | cut -d' ' -f2)
+}
+setYEAR() {
+YEAR=$(echo $DATE | cut -d'-' -f1)
+}
+setMONTH() {
+MONTH=$(echo $DATE | cut -d'-' -f2)
+}
+setDAY() {
+MONTH=$(echo $DATE | cut -d'-' -f3)
+}
+setTIME() {
+TIME=$(stat $1 | grep Modify "$VAR" | cut -d' ' -f3)
+}
+setHOUR() {
+HOUR=$(echo "$TIME" | cut -c1-2)
+}
+setMINUTE() {
+MINUTE=$(echo "$TIME" | cut -c4-5)
+}
+setSECOND() {
+SECOND=$(echo "$TIME" | cut -c7-8)
+}
+setALL() {
+setDATE $1
+setTIME $1
+setYEAR
+setMONTH
+setDAY
+setHOUR
+setMINUTE
+setSECOND
+MAKE="Unknown_Manufacturer"
+MODEL="Unknown_Camera"
+}
