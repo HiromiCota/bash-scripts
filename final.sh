@@ -26,9 +26,15 @@ SOURCE=$1
 sanityCheck $SOURCE #exits if fails
 IFS=': '
 for f in "$SOURCE"; do
+	EXTENSION=${$1##*.}
 	HASH=$(tail -c1000 "$f" | md5sum)
 	grep -q "$HASH" "$HASHES"
 	if [[ $? -eq 1 ]]; then #only process files not in HASHES
+		if [[ "$EXTENSION" == ".jpg" ]]; then
+			((JPGTOTAL++))
+		else
+			((VIDTOTAL++))
+		fi
 		PWD=$(pwd)
 		if [[ $PWD == $LASTPWD]]; then
 			logDirectory "$PWD"
@@ -39,8 +45,22 @@ for f in "$SOURCE"; do
 		"$HASH" >> "$HASHES" 
 	else
 		ERRLOG <<  "Duplicate file ""$PWD""$f"" ignored."
+		if [[ "$EXTENSION" == ".jpg" ]]; then
+			((DUPJPG++))
+		else
+			((DUPVID++))
+		fi
 	fi	
 done
-
-echo $DIR
+copyTemp
+if [[ "$FORCE" -eq 1 ]]; then
+	eraseSource
+fi
+echo "********************************************************************************"
+echo "Organization complete!"
+echo "$CURRENTJPG"" jpegs copied."
+echo "$DUPJPG"" duplicate jpegs skipped."
+echo "$CURRENTVID"" videos copied."
+echo "$DUPVID"" duplicate videos skipped."
+echo "********************************************************************************"
 
